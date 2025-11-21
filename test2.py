@@ -202,7 +202,7 @@ if file:
             category = st.selectbox("📁 Category", category_options)
 
         with col2:
-            caste_options = dataset["Cast"].unique().tolist()
+            caste_options = dataset["Caste"].unique().tolist()
             caste_options.insert(0, "select")
             caste = st.selectbox("🧬 Caste", caste_options)
 
@@ -265,4 +265,5 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
