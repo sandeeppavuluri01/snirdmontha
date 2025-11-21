@@ -206,11 +206,11 @@ if file:
             caste_options.insert(0, "select")
             caste = st.selectbox("🧬 Caste", caste_options)
 
-        age = st.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
+        age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
 
         filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
         doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name", "Catagiry", "Cast", "Age"]
+                    "Family Head Name", "Category", "Caste", "Age"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -222,7 +222,7 @@ if file:
                     if doc_list[i] != "Age":
                         result = result[result[doc_list[i]] == filter_list[i]]
                     else:
-                        if filter_list[i] == "below 18":
+                        if filter_list[i] == "Below 18":
                             result = result[result["Age"] < 18]
                         elif filter_list[i] == "18 to 50":
                             result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
@@ -265,5 +265,6 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
