@@ -206,7 +206,7 @@ if file:
             caste_options.insert(0, "select")
             caste = st.selectbox("🧬 Caste", caste_options)
         with col1:
-            age = st.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
+            age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
         with col2:
             cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
 
@@ -225,7 +225,7 @@ if file:
                     if doc_list[i] != "Age":
                         result = result[result[doc_list[i]] == filter_list[i]]
                     else:
-                        if filter_list[i] == "below 18":
+                        if filter_list[i] == "Below 18":
                             result = result[result["Age"] < 18]
                         elif filter_list[i] == "18 to 50":
                             result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
@@ -268,4 +268,5 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
