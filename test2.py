@@ -208,10 +208,10 @@ if file:
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
         with col2:
-            cash_transfer = st.selectbox("Cash Transfer",["select","completed","pending"])
+            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
 
 
-        filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age,cash_transfer]
+        filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age, cash_transfer]
         doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
                     "Family Head Name", "Category", "Cast", "Age","CASH Transfer"]
 
@@ -268,3 +268,4 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
