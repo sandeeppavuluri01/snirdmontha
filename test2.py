@@ -195,9 +195,9 @@ if file:
 
         f_name = st.text_input("👨‍👩‍👦 Family Head")
 
-        col1, col2 = st.columns(2)
+        '''col1, col2 = st.columns(2)
         with col1:
-            category_options = dataset["Category "].unique().tolist()
+            category_options = dataset["Category"].unique().tolist()
             category_options.insert(0, "select")
             category = st.selectbox("📁 Category", category_options)
 
@@ -208,12 +208,38 @@ if file:
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
         with col2:
-            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
+            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])'''
+
+        # AFTER reading Excel
+        dataset.columns = dataset.columns.str.strip()
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            category_options = ["select"] + dataset["Category"].dropna().unique().tolist()
+            category = st.selectbox("📁 Category", category_options)
+
+        with col2:
+            caste_options = ["select"] + dataset["Caste"].dropna().unique().tolist()
+            caste = st.selectbox("🧬 Caste", caste_options)
+
+        with col1:
+            age = st.selectbox(
+                "🎂 Age Group",
+                ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"]
+        )
+
+        with col2:
+            cash_transfer = st.selectbox(
+                "Cash Transfer",
+                ["select", "Completed", "Pending"]
+            )
+
 
 
         filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age, cash_transfer]
         doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name", "Category ", "Cast", "Age","CASH Transfer"]
+                    "Family Head Name", "Category", "Caste", "Age","CASH Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -268,6 +294,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
