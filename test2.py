@@ -183,7 +183,7 @@ if file:
     if st.session_state.show_search:
         st.markdown("## 🔍 Search Records")
 
-        colA, colB, colD = st.columns(4)
+        colA, colB, colD = st.columns(3)
         with colA:
             v_name = st.text_input("🏘 Name of the Mandal")
         with colB:
@@ -206,14 +206,14 @@ if file:
             
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
-        with col2:
-            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
+        # with col2:
+        #     cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
 
         # AFTER reading Excel
     
        filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
         doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
-                    "Family Head Name" , "Caste", "Category", "Age", "CASH Transfer"]
+                    "Family Head Name" , "Caste", "Category", "Age", '''"CASH Transfer"''']
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -254,20 +254,21 @@ if file:
             if gender_categrory != "select":
                 if gender_categrory == "Children":
                     if gender == "Male":
-                        result = result[result["Numer of Child_Male"] > 0]
-                        count = result["Numer of Child_Male"].sum()
+                        result = result[result["Numer of Children_Male"] > 0]
+                        count = result["Numer of Children_Male"].sum()
                     else:
-                        result = result[result["Numer of Child_Female"] > 0]
-                        count = result["Numer of Child_Female"].sum()
+                        result = result[result["Numer of Children_Female"] > 0]
+                        count = result["Numer of Children_Female"].sum()
                 else:
                     if gender == "Male":
-                        result = result[result["Physically Challanged Persons_Male"] > 0]
-                        count = result["Physically Challanged Persons_Male"].sum()
+                        result = result[result["Disability_Male"] > 0]
+                        count = result["Disability_Male"].sum()
                     else:
-                        result = result[result["Physically Challanged Persons_Female"] > 0]
-                        count = result["Physically Challanged Persons_Female"].sum()
+                        result = result[result["Disability_Female"] > 0]
+                        count = result["Disability_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
