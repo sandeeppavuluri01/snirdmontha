@@ -197,14 +197,15 @@ if file:
 
         col1, col2 = st.columns(2)
         with col1:
-            category_options = dataset["Category"].unique().tolist()
-            category_options.insert(0, "select")
-            category = st.selectbox("📁 Caste", category_options)
-
-        with col2:
             caste_options = dataset["Caste"].unique().tolist()
             caste_options.insert(0, "select")
-            caste = st.selectbox("🧬 Category", caste_options)
+            caste = st.selectbox("🧬 Caste", caste_options)
+
+        with col2:
+            category_options = dataset["Category"].unique().tolist()
+            category_options.insert(0, "select")
+            category = st.selectbox("📁 Category", category_options)
+            
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
         with col2:
@@ -269,6 +270,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
