@@ -209,7 +209,7 @@ if file:
             caste = st.selectbox("🧬 Caste", caste_options)
 
         with col2:
-            category_options = dataset["Category"].unique().tolist()
+            category_options = dataset["Category "].unique().tolist()
             category_options.insert(0, "select")
             category = st.selectbox("📁 Category", category_options)
             
@@ -222,7 +222,7 @@ if file:
     
        filter_list = [v_name, p_name, m_name, d_name, f_name, caste, category, age, cash_transfer]
         doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name" , "Caste", "Category", "Age","CASH Transfer"]
+                    "Family Head Name" , "Caste", "Category ", "Age","CASH Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -277,6 +277,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
