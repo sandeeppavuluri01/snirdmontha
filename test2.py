@@ -169,13 +169,6 @@ if file:
     dataset = pd.read_excel(file, header=None)
     dataset.drop(index=[0, 1, 2, 3], axis=0, inplace=True)
     dataset.columns = columns
-    
-    '''dataset.columns = (
-        dataset.columns
-        .str.strip()
-        .str.replace('\u00a0', ' ', regex=False)
-    )'''
-
 
     # ---------------- ACTION BUTTONS ------------------
     st.markdown("### ⚙️ Choose Action")
@@ -190,28 +183,26 @@ if file:
     if st.session_state.show_search:
         st.markdown("## 🔍 Search Records")
 
-        colA, colB, colC, colD = st.columns(4)
+        colA, colB, colD = st.columns(4)
         with colA:
-            v_name = st.text_input("🏘 Village")
+            v_name = st.text_input("🏘 Name of the Mandal")
         with colB:
             p_name = st.text_input("📍 Panchayat")
-        with colC:
-            m_name = st.text_input("🗺 Mandal")
         with colD:
             d_name = st.text_input("🌏 District")
 
         f_name = st.text_input("👨‍👩‍👦 Family Head")
 
-        # col1, col2 = st.columns(2)
-        # with col1:
-        #     caste_options = dataset["Caste"].unique().tolist()
-        #     caste_options.insert(0, "select")
-        #     caste = st.selectbox("🧬 Caste", caste_options)
+        col1, col2 = st.columns(2)
+        with col1:
+            caste_options = dataset["Caste"].unique().tolist()
+            caste_options.insert(0, "select")
+            caste = st.selectbox("🧬 Caste", caste_options)
 
-        # with col2:
-        #     category_options = dataset["Category "].unique().tolist()
-        #     category_options.insert(0, "select")
-        #     category = st.selectbox("📁 Category", category_options)
+        with col2:
+            category_options = dataset["Category "].unique().tolist()
+            category_options.insert(0, "select")
+            category = st.selectbox("📁 Category", category_options)
             
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
@@ -220,9 +211,9 @@ if file:
 
         # AFTER reading Excel
     
-       filter_list = [v_name, p_name, m_name, d_name, f_name, caste, category, age, cash_transfer]
-        doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name" , "Caste", "Category ", "Age","CASH Transfer"]
+       filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
+        doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
+                    "Family Head Name" , "Caste", "Category", "Age", "CASH Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -250,7 +241,7 @@ if file:
     if st.session_state.show_count:
         st.markdown("## 📊 Count Summary")
 
-        c_village = st.text_input("🏘 Village Name")
+        c_village = st.text_input("🏘 Name of the Mandal")
         gender_categrory = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
         gender = st.selectbox("⚧ Gender", ["select", "Male", "Female"])
 
@@ -258,7 +249,7 @@ if file:
             result = dataset.copy()
 
             if c_village != "":
-                result = result[result["Village Name"] == c_village]
+                result = result[result["Name of the Mandal"] == c_village]
 
             if gender_categrory != "select":
                 if gender_categrory == "Children":
