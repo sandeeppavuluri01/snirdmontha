@@ -213,7 +213,7 @@ if file:
 
         filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age, cash_transfer]
         doc_list = ["Village Name", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name", "Category", "Cast", "Age","CASH Transfer"]
+                    "Family Head Name", "Category ", "Cast", "Age","CASH Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -268,6 +268,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
