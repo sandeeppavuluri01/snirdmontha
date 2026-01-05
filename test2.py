@@ -170,6 +170,12 @@ if file:
     dataset.drop(index=[0, 1, 2, 3], axis=0, inplace=True)
     dataset.columns = columns
 
+    dataset.columns = (
+    dataset.columns
+    .str.strip()        # remove leading/trailing spaces
+    .str.replace("\n", "", regex=True)
+    )
+
     # ---------------- ACTION BUTTONS ------------------
     st.markdown("### ⚙️ Choose Action")
     col1, col2 = st.columns(2)
@@ -197,7 +203,7 @@ if file:
 
         col1, col2 = st.columns(2)
         with col1:
-            category_options = dataset["Category "].unique().tolist()
+            category_options = dataset["Category"].unique().tolist()
             category_options.insert(0, "select")
             category = st.selectbox("📁 Category", category_options)
 
@@ -268,6 +274,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
