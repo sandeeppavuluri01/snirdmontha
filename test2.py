@@ -169,6 +169,13 @@ if file:
     dataset = pd.read_excel(file, header=None)
     dataset.drop(index=[0, 1, 2, 3], axis=0, inplace=True)
     dataset.columns = columns
+    
+    dataset.columns = (
+        dataset.columns
+        .str.strip()
+        .str.replace('\u00a0', ' ', regex=False)
+    )
+
 
     # ---------------- ACTION BUTTONS ------------------
     st.markdown("### ⚙️ Choose Action")
@@ -270,6 +277,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
