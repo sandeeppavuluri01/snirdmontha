@@ -170,11 +170,11 @@ if file:
     dataset.drop(index=[0, 1, 2, 3], axis=0, inplace=True)
     dataset.columns = columns
     
-    dataset.columns = (
+    '''dataset.columns = (
         dataset.columns
         .str.strip()
         .str.replace('\u00a0', ' ', regex=False)
-    )
+    )'''
 
 
     # ---------------- ACTION BUTTONS ------------------
@@ -202,16 +202,16 @@ if file:
 
         f_name = st.text_input("👨‍👩‍👦 Family Head")
 
-        col1, col2 = st.columns(2)
-        with col1:
-            caste_options = dataset["Caste"].unique().tolist()
-            caste_options.insert(0, "select")
-            caste = st.selectbox("🧬 Caste", caste_options)
+        # col1, col2 = st.columns(2)
+        # with col1:
+        #     caste_options = dataset["Caste"].unique().tolist()
+        #     caste_options.insert(0, "select")
+        #     caste = st.selectbox("🧬 Caste", caste_options)
 
-        with col2:
-            category_options = dataset["Category "].unique().tolist()
-            category_options.insert(0, "select")
-            category = st.selectbox("📁 Category", category_options)
+        # with col2:
+        #     category_options = dataset["Category "].unique().tolist()
+        #     category_options.insert(0, "select")
+        #     category = st.selectbox("📁 Category", category_options)
             
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
@@ -277,6 +277,7 @@ if file:
                         count = result["Physically Challanged Persons_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
