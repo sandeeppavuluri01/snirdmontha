@@ -183,12 +183,12 @@ if file:
     if st.session_state.show_search:
         st.markdown("## 🔍 Search Records")
 
-        colA, colB, colD = st.columns(3)
+        colA, colB, colC = st.columns(3)
         with colA:
             v_name = st.text_input("🏘 Name of the Mandal")
         with colB:
             p_name = st.text_input("📍 Panchayat")
-        with colD:
+        with colC:
             d_name = st.text_input("🌏 District")
 
         f_name = st.text_input("👨‍👩‍👦 Family Head")
@@ -206,14 +206,14 @@ if file:
             
         with col1:
             age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
-        # with col2:
-        #     cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
+        with col2:
+            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
 
         # AFTER reading Excel
     
-       filter_list = [v_name, p_name, d_name, f_name, caste, category, age]
+       filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
         doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
-                    "Family Head Name" , "Caste", "Category", "Age"]
+                    "Family Head Name" , "Caste", "Category", "Age", "Cash Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -268,6 +268,7 @@ if file:
                         count = result["Disability_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
