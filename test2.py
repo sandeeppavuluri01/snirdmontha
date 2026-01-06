@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-from PIL import Image
 import base64
 
 # --------- PAGE CONFIG ---------
@@ -10,129 +9,44 @@ st.set_page_config(
     page_icon="🌾"
 )
 
-# --------- CUSTOM TEAL THEME (INPUTS + BUTTONS + SUCCESS BOX UPDATED) ---------
+# --------- STYLE ---------
 st.markdown("""
 <style>
+body, .stApp { background-color: #ffffff; }
+hr { border: 1px solid #B2EBF2; }
+label { font-weight: 600 !important; color: #004D40 !important; }
 
-/* Main background */
-body, .stApp {
-    background-color: #ffffff;
-}
-
-/* Header divider */
-hr {
-    border: 1px solid #B2EBF2;
-}
-
-/* Labels */
-label {
-    font-weight: 600 !important;
-    color: #004D40 !important;
-}
-
-/* -------- INPUT FIELDS -------- */
 input[type=text], select, textarea, .stTextInput>div>div>input {
     background-color: #E0F2F1 !important;
     border: 2px solid #009688 !important;
     color: #004D40 !important;
     border-radius: 6px !important;
-    padding: 4px 10px !important;
-    font-size: 15px !important;
 }
 
-input:hover, .stTextInput:hover input {
-    border-color: #00796B !important;
-}
-
-input:focus, .stTextInput:focus-within input {
-    border-color: #004D40 !important;
-    box-shadow: 0 0 6px #80CBC4 !important;
-}
-
-/* Selectbox */
-.stSelectbox > div > div {
-    background-color: #E0F2F1 !important;
-    border: 2px solid #009688 !important;
-    color: #004D40 !important;
-    border-radius: 6px !important;
-}
-
-/* -------- BUTTONS -------- */
 div.stButton > button {
     background-color: #009688 !important;
     color: white !important;
     border-radius: 8px;
     padding: 8px 18px;
-    font-size: 16px;
-    border: 1px solid #00796B;
 }
-
-div.stButton > button:hover {
-    background-color: #00796B !important;
-    border-color: #00695C !important;
-}
-
-/* -------- HEADERS -------- */
-h2, h3, h4 {
-    color: #004D40 !important;
-    font-weight: 700 !important;
-}
-
-/* DataFrame header */
-.dataframe thead th {
-    background-color: #B2DFDB !important;
-    color: #004D40 !important;
-    font-weight: 700 !important;
-}
-
-/* -------- SUCCESS BOX -------- */
-.stAlert {
-    background-color: #00796B !important;
-    border: 2px solid #009688 !important;
-    color: #ffffff !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-}
-
-/* ----------- MODERN CENTERED HEADER IMAGE ----------- */
-.header-box {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: -10px;
-    margin-bottom: 5px;
-}
-
-.header-img {
-    width: 62%;
-    max-width: 700px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 77, 64, 0.30);
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-# --------- HEADER IMAGE (MODERN CENTERED) ---------
+# --------- HEADER IMAGE ---------
 try:
     img_data = base64.b64encode(open("testing.png", "rb").read()).decode()
     st.markdown(
-        f"""
-        <div class="header-box">
-            <img src="data:image/png;base64,{img_data}" class="header-img">
-        </div>
-        """,
+        f"<div style='text-align:center'><img src='data:image/png;base64,{img_data}' width='65%'></div>",
         unsafe_allow_html=True
     )
 except:
-    st.warning("Header image not found. Please place testing.png in the same folder.")
+    st.warning("Header image not found (testing.png)")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # ---------------- SESSION STATE -----------------
 if "show_search" not in st.session_state:
     st.session_state.show_search = False
-
 if "show_count" not in st.session_state:
     st.session_state.show_count = False
 
@@ -144,31 +58,50 @@ def show_count_ui():
     st.session_state.show_count = True
     st.session_state.show_search = False
 
+# ---------------- HELPER: MAKE UNIQUE COLUMNS -----------------
+def make_unique(cols):
+    seen = {}
+    new_cols = []
+    for col in cols:
+        col = str(col).strip()
+        if col not in seen:
+            seen[col] = 0
+            new_cols.append(col)
+        else:
+            seen[col] += 1
+            new_cols.append(f"{col}_{seen[col]}")
+    return new_cols
+
 # ---------------- FILE UPLOAD ------------------
 st.markdown("### 📤 Upload Excel File")
 file = st.file_uploader("Choose .xlsx file", type=["xlsx"])
 
 if file:
 
+    # ----- READ MULTI-HEADER -----
     df = pd.read_excel(file, header=[1, 2, 3])
     columns = []
 
     for i in df.columns:
-        if "Unnamed" in i[1]:
+        if "Unnamed" in str(i[1]):
             col_name = i[0]
-        elif "Unnamed" in i[2]:
-            col_name = "_".join([i[0], i[1]])
+        elif "Unnamed" in str(i[2]):
+            col_name = f"{i[0]}_{i[1]}"
             if "Rs." in col_name:
                 col_name = columns[-1] + "_Rs."
             elif "Value" in col_name:
                 col_name = columns[-1] + "_Value"
         else:
-            col_name = "_".join([i[0], i[1], i[2]])
+            col_name = f"{i[0]}_{i[1]}_{i[2]}"
         columns.append(col_name)
 
-    dataset = pd.read_excel(file, header=None)
-    dataset.drop(index=[0, 1, 2, 3], axis=0, inplace=True)
-    dataset.columns = columns
+    # ----- READ DATA -----
+    dataset = pd.read_excel(file, header=None, skiprows=4)
+    dataset.columns = make_unique(columns)
+
+    # Convert Age safely
+    if "Age" in dataset.columns:
+        dataset["Age"] = pd.to_numeric(dataset["Age"], errors="coerce")
 
     # ---------------- ACTION BUTTONS ------------------
     st.markdown("### ⚙️ Choose Action")
@@ -184,107 +117,81 @@ if file:
         st.markdown("## 🔍 Search Records")
 
         colA, colB, colC, colD = st.columns(4)
-        with colA:
-            v_name = st.text_input("🏘 Name of the Mandal")
-        with colB:
-            p_name = st.text_input("📍 Panchayat")
-        with colC:
-            m_name = st.text_input(" Mandal ")
-        with colD:
-            d_name = st.text_input("🌏 District")
+        v_name = colA.text_input("🏘 Mandal Name").strip()
+        p_name = colB.text_input("📍 Panchayat").strip()
+        m_name = colC.text_input("ward no").strip()
+        d_name = colD.text_input("🌏 District").strip()
 
-        f_name = st.text_input("👨‍👩‍👦 Family Head")
+        f_name = st.text_input("👨‍👩‍👦 Family Head").strip()
+
+        col1, col2 = st.columns(2) 
+
+        category_options = ["select"] + sorted(dataset["Category"].dropna().unique().tolist())
+        caste_options = ["select"] + sorted(dataset["Caste"].dropna().unique().tolist())
+
+        category = col1.selectbox("📁 Category", category_options)
+        caste = col2.selectbox("🧬 Caste", caste_options)
 
         col1, col2 = st.columns(2)
-        with col1:
-            caste_options = dataset["Caste"].unique().tolist()
-            caste_options.insert(0, "select")
-            caste = st.selectbox("🧬 Caste", caste_options)
+        age = col1.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
+        cash_transfer = col2.selectbox("Cash Transfer", ["select", "completed", "pending"])
 
-        with col2:
-            category_options = dataset["Category "].unique().tolist()
-            category_options.insert(0, "select")
-            category = st.selectbox("📁 Category", category_options)
-            
-        with col1:
-            age = st.selectbox("🎂 Age Group", ["select", "Below 18", "18 to 50", "50 to 60", "Above 60"])
-        with col2:
-            cash_transfer = st.selectbox("Cash Transfer",["select","Completed","Pending"])
-
-        # AFTER reading Excel
-    
-       filter_list = [v_name, p_name, m_name, d_name, f_name, caste, category, age, cash_transfer]
-        doc_list = ["Name of the Mandal", "Panchayat/ Area", "Mandal", "District",
-                    "Family Head Name" , "Caste", "Category", "Age", "Cash Transfer"]
+        filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
+        doc_list = [
+            "Name of the Mandal",
+            "Panchayat/ Area",
+            "Ward No.",
+            "District",
+            "Family Head Name",
+            "Category",
+            "Caste",
+            "Age"
+        ]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
 
             for i in range(len(filter_list)):
-                if filter_list[i] in ['', 'select']:
+                if filter_list[i] in ["", "select"]:
                     continue
+
+                if doc_list[i] != "Age":
+                    result = result[result[doc_list[i]] == filter_list[i]]
                 else:
-                    if doc_list[i] != "Age":
-                        result = result[result[doc_list[i]] == filter_list[i]]
+                    if filter_list[i] == "below 18":
+                        result = result[result["Age"] < 18]
+                    elif filter_list[i] == "18 to 50":
+                        result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
+                    elif filter_list[i] == "50 to 60":
+                        result = result[(result["Age"] >= 50) & (result["Age"] < 60)]
                     else:
-                        if filter_list[i] == "Below 18":
-                            result = result[result["Age"] < 18]
-                        elif filter_list[i] == "18 to 50":
-                            result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
-                        elif filter_list[i] == "50 to 60":
-                            result = result[(result["Age"] >= 50) & (result["Age"] < 60)]
-                        else:
-                            result = result[result["Age"] >= 60]
+                        result = result[result["Age"] >= 60]
 
             st.success(f"✔ {len(result)} Records Found")
-            st.dataframe(result, use_container_width=True, height=350)
+            st.dataframe(result.iloc[:, 1:-1], use_container_width=True, height=350)
 
     # ---------------- COUNT SECTION ------------------
     if st.session_state.show_count:
         st.markdown("## 📊 Count Summary")
 
-        c_village = st.text_input("🏘 Name of the Mandal")
-        gender_categrory = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
+        c_village = st.text_input("🏘 Mandal Name")
+        gender_category = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
         gender = st.selectbox("⚧ Gender", ["select", "Male", "Female"])
 
         if st.button("▶ RUN COUNT"):
             result = dataset.copy()
+            count = 0
 
-            if c_village != "":
+            if c_village:
                 result = result[result["Name of the Mandal"] == c_village]
 
-            if gender_categrory != "select":
-                if gender_categrory == "Children":
-                    if gender == "Male":
-                        result = result[result["Numer of Children_Male"] > 0]
-                        count = result["Numer of Children_Male"].sum()
-                    else:
-                        result = result[result["Numer of Children_Female"] > 0]
-                        count = result["Numer of Children_Female"].sum()
+            if gender_category != "select" and gender != "select":
+                if gender_category == "Children":
+                    col = "Numer of Children_Male" if gender == "Male" else "Numer of Children_Female"
                 else:
-                    if gender == "Male":
-                        result = result[result["Disability_Male"] > 0]
-                        count = result["Disability_Male"].sum()
-                    else:
-                        result = result[result["Disability_Female"] > 0]
-                        count = result["Disability_Female"].sum()
+                    col = "Disability_Male" if gender == "Male" else "Disability_Female"
+
+                if col in result.columns:
+                    count = result[col].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
