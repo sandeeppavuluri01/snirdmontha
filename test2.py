@@ -183,12 +183,14 @@ if file:
     if st.session_state.show_search:
         st.markdown("## 🔍 Search Records")
 
-        colA, colB, colC = st.columns(3)
+        colA, colB, colC, colD = st.columns(4)
         with colA:
             v_name = st.text_input("🏘 Name of the Mandal")
         with colB:
             p_name = st.text_input("📍 Panchayat")
         with colC:
+            m_name = st.text_input(" Mandal ")
+        with colD:
             d_name = st.text_input("🌏 District")
 
         f_name = st.text_input("👨‍👩‍👦 Family Head")
@@ -211,8 +213,8 @@ if file:
 
         # AFTER reading Excel
     
-       filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
-        doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
+       filter_list = [v_name, p_name, m_name, d_name, f_name, caste, category, age, cash_transfer]
+        doc_list = ["Name of the Mandal", "Panchayat/ Area", "Mandal", "District",
                     "Family Head Name" , "Caste", "Category", "Age", "Cash Transfer"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
@@ -268,6 +270,7 @@ if file:
                         count = result["Disability_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
