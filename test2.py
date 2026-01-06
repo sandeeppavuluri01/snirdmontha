@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import base64
+import os
 
 # --------- PAGE CONFIG ---------
 st.set_page_config(
@@ -58,7 +59,7 @@ def show_count_ui():
     st.session_state.show_count = True
     st.session_state.show_search = False
 
-# ---------------- HELPER: MAKE UNIQUE COLUMNS -----------------
+# ---------------- HELPER: UNIQUE COLUMNS -----------------
 def make_unique(cols):
     seen = {}
     new_cols = []
@@ -72,126 +73,71 @@ def make_unique(cols):
             new_cols.append(f"{col}_{seen[col]}")
     return new_cols
 
-# ---------------- FILE UPLOAD ------------------
-st.markdown("### 📤 Upload Excel File")
-file = st.file_uploader("Choose .xlsx file", type=["xlsx"])
+# ---------------- LOAD EXCEL (NO UPLOAD) -----------------
+FILE_PATH = "data/snir_data.xlsx"
 
-if file:
+if not os.path.exists(FILE_PATH):
+    st.error("❌ Excel file not found at data/snir_data.xlsx")
+    st.stop()
 
-    # ----- READ MULTI-HEADER -----
-    df = pd.read_excel(file, header=[1, 2, 3])
-    columns = []
+st.success("📁 Data loaded from local Excel file")
 
-    for i in df.columns:
-        if "Unnamed" in str(i[1]):
-            col_name = i[0]
-        elif "Unnamed" in str(i[2]):
-            col_name = f"{i[0]}_{i[1]}"
-            if "Rs." in col_name:
-                col_name = columns[-1] + "_Rs."
-            elif "Value" in col_name:
-                col_name = columns[-1] + "_Value"
-        else:
-            col_name = f"{i[0]}_{i[1]}_{i[2]}"
-        columns.append(col_name)
+# ----- READ MULTI HEADER -----
+df = pd.read_excel(FILE_PATH, header=[1, 2, 3])
+columns = []
 
-    # ----- READ DATA -----
-    dataset = pd.read_excel(file, header=None, skiprows=4)
-    dataset.columns = make_unique(columns)
+for i in df.columns:
+    if "Unnamed" in str(i[1]):
+        col_name = i[0]
+    elif "Unnamed" in str(i[2]):
+        col_name = f"{i[0]}_{i[1]}"
+        if "Rs." in col_name:
+            col_name = columns[-1] + "_Rs."
+        elif "Value" in col_name:
+            col_name = columns[-1] + "_Value"
+    else:
+        col_name = f"{i[0]}_{i[1]}_{i[2]}"
+    columns.append(col_name)
 
-    # Convert Age safely
-    if "Age" in dataset.columns:
-        dataset["Age"] = pd.to_numeric(dataset["Age"], errors="coerce")
+# ----- READ DATA -----
+dataset = pd.read_excel(FILE_PATH, header=None, skiprows=4)
+dataset.columns = make_unique(columns)
 
-    # ---------------- ACTION BUTTONS ------------------
-    st.markdown("### ⚙️ Choose Action")
+# Convert Age safely
+if "Age" in dataset.columns:
+    dataset["Age"] = pd.to_numeric(dataset["Age"], errors="coerce")
+
+# ---------------- ACTION BUTTONS -----------------
+st.markdown("### ⚙️ Choose Action")
+col1, col2 = st.columns(2)
+
+with col1:
+    st.button("🔍 SEARCH RECORDS", on_click=show_search_ui, use_container_width=True)
+with col2:
+    st.button("📊 COUNT SUMMARY", on_click=show_count_ui, use_container_width=True)
+
+# ---------------- SEARCH SECTION -----------------
+if st.session_state.show_search:
+    st.markdown("## 🔍 Search Records")
+
+    colA, colB, colC, colD = st.columns(4)
+    v_name = colA.text_input("🏘 Mandal Name").strip()
+    p_name = colB.text_input("📍 Panchayat").strip()
+    m_name = colC.text_input("Ward No").strip()
+    d_name = colD.text_input("🌏 District").strip()
+
+    f_name = st.text_input("👨‍👩‍👦 Family Head").strip()
+
     col1, col2 = st.columns(2)
+    category_options = ["select"] + sorted(dataset["Category"].dropna().unique().tolist())
+    caste_options = ["select"] + sorted(dataset["Caste"].dropna().unique().tolist())
 
-    with col1:
-        st.button("🔍 SEARCH RECORDS", on_click=show_search_ui, use_container_width=True)
-    with col2:
-        st.button("📊 COUNT SUMMARY", on_click=show_count_ui, use_container_width=True)
+    category = col1.selectbox("📁 Category", category_options)
+    caste = col2.selectbox("🧬 Caste", caste_options)
 
-    # ---------------- SEARCH SECTION ------------------
-    if st.session_state.show_search:
-        st.markdown("## 🔍 Search Records")
+    col1, col2 = st.columns(2)
+    age = col1.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
 
-        colA, colB, colC, colD = st.columns(4)
-        v_name = colA.text_input("🏘 Mandal Name").strip()
-        p_name = colB.text_input("📍 Panchayat").strip()
-        m_name = colC.text_input("ward no").strip()
-        d_name = colD.text_input("🌏 District").strip()
-
-        f_name = st.text_input("👨‍👩‍👦 Family Head").strip()
-
-        col1, col2 = st.columns(2) 
-
-        category_options = ["select"] + sorted(dataset["Category"].dropna().unique().tolist())
-        caste_options = ["select"] + sorted(dataset["Caste"].dropna().unique().tolist())
-
-        category = col1.selectbox("📁 Category", category_options)
-        caste = col2.selectbox("🧬 Caste", caste_options)
-
-        col1, col2 = st.columns(2)
-        age = col1.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
-        cash_transfer = col2.selectbox("Cash Transfer", ["select", "completed", "pending"])
-
-        filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
-        doc_list = [
-            "Name of the Mandal",
-            "Panchayat/ Area",
-            "Ward No.",
-            "District",
-            "Family Head Name",
-            "Category",
-            "Caste",
-            "Age"
-        ]
-
-        if st.button("▶ RUN SEARCH", type="primary"):
-            result = dataset.copy()
-
-            for i in range(len(filter_list)):
-                if filter_list[i] in ["", "select"]:
-                    continue
-
-                if doc_list[i] != "Age":
-                    result = result[result[doc_list[i]] == filter_list[i]]
-                else:
-                    if filter_list[i] == "below 18":
-                        result = result[result["Age"] < 18]
-                    elif filter_list[i] == "18 to 50":
-                        result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
-                    elif filter_list[i] == "50 to 60":
-                        result = result[(result["Age"] >= 50) & (result["Age"] < 60)]
-                    else:
-                        result = result[result["Age"] >= 60]
-
-            st.success(f"✔ {len(result)} Records Found")
-            st.dataframe(result.iloc[:, 1:-1], use_container_width=True, height=350)
-
-    # ---------------- COUNT SECTION ------------------
-    if st.session_state.show_count:
-        st.markdown("## 📊 Count Summary")
-
-        c_village = st.text_input("🏘 Mandal Name")
-        gender_category = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
-        gender = st.selectbox("⚧ Gender", ["select", "Male", "Female"])
-
-        if st.button("▶ RUN COUNT"):
-            result = dataset.copy()
-            count = 0
-
-            if c_village:
-                result = result[result["Name of the Mandal"] == c_village]
-
-            if gender_category != "select" and gender != "select":
-                if gender_category == "Children":
-                    col = "Numer of Children_Male" if gender == "Male" else "Numer of Children_Female"
-                else:
-                    col = "Disability_Male" if gender == "Male" else "Disability_Female"
-
-                if col in result.columns:
-                    count = result[col].sum()
-
-            st.success(f"### ✔ Total Count: **{count}**")
+    filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
+    doc_list = [
+        "Name of the Mandal",
