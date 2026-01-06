@@ -141,4 +141,60 @@ if st.session_state.show_search:
     filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
     doc_list = [
         "Name of the Mandal",
+        "Panchayat/ Area",
+        "Ward No.",
+        "District",
+        "Family Head Name",
+        "Category",
+        "Caste",
+        "Age"
+    ]
 
+    if st.button("▶ RUN SEARCH", type="primary"):
+        result = dataset.copy()
+
+        for i in range(len(filter_list)):
+            if filter_list[i] in ["", "select"]:
+                continue
+
+            if doc_list[i] != "Age":
+                result = result[result[doc_list[i]] == filter_list[i]]
+            else:
+                if age == "below 18":
+                    result = result[result["Age"] < 18]
+                elif age == "18 to 50":
+                    result = result[(result["Age"] >= 18) & (result["Age"] < 50)]
+                elif age == "50 to 60":
+                    result = result[(result["Age"] >= 50) & (result["Age"] < 60)]
+                else:
+                    result = result[result["Age"] >= 60]
+
+        st.success(f"✔ {len(result)} Records Found")
+        st.dataframe(result.iloc[:, 1:-1], use_container_width=True, height=350)
+
+# ---------------- COUNT SECTION -----------------
+if st.session_state.show_count:
+    st.markdown("## 📊 Count Summary")
+
+    c_village = st.text_input("🏘 Mandal Name").strip()
+    gender_category = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
+    gender = st.selectbox("⚧ Gender", ["select", "Male", "Female"])
+
+    if st.button("▶ RUN COUNT"):
+        result = dataset.copy()
+        count = 0
+
+        if c_village:
+            result = result[result["Name of the Mandal"] == c_village]
+
+        if gender_category != "select" and gender != "select":
+            if gender_category == "Children":
+                col = "Numer of Children_Male" if gender == "Male" else "Numer of Children_Female"
+            else:
+                col = "Disability_Male" if gender == "Male" else "Disability_Female"
+
+            if col in result.columns:
+                result[col] = result[col].fillna(0).astype(int)
+                count = result[col].sum()
+
+        st.success(f"### ✔ Total Persons Count: **{count}**")
