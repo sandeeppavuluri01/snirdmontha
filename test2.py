@@ -74,7 +74,7 @@ def make_unique(cols):
     return new_cols
 
 # ---------------- LOAD EXCEL (NO UPLOAD) -----------------
-FILE_PATH = "data/snir_data.xlsx"
+FILE_PATH = "1021- India - Cyclon Montha - HH Survey details - 30.12.2025.xlsx"
 
 if not os.path.exists(FILE_PATH):
     st.error("❌ Excel file not found at data/snir_data.xlsx")
@@ -141,3 +141,4 @@ if st.session_state.show_search:
     filter_list = [v_name, p_name, m_name, d_name, f_name, category, caste, age]
     doc_list = [
         "Name of the Mandal",
+
