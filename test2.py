@@ -211,7 +211,7 @@ if file:
 
         # AFTER reading Excel
     
-       filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
+       filter_list = [v_name, p_name, d_name, f_name, caste, category, age]
         doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
                     "Family Head Name" , "Caste", "Category", "Age"]
 
@@ -268,6 +268,7 @@ if file:
                         count = result["Disability_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
