@@ -213,7 +213,7 @@ if file:
     
        filter_list = [v_name, p_name, d_name, f_name, caste, category, age, cash_transfer]
         doc_list = ["Name of the Mandal", "Panchayat/ Area", "District",
-                    "Family Head Name" , "Caste", "Category", "Age", '''"CASH Transfer"''']
+                    "Family Head Name" , "Caste", "Category", "Age"]
 
         if st.button("▶ RUN SEARCH", type="primary"):
             result = dataset.copy()
@@ -268,6 +268,7 @@ if file:
                         count = result["Disability_Female"].sum()
 
             st.success(f"### ✔ Total Count: **{count}**")
+
 
 
 
