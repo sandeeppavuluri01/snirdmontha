@@ -99,28 +99,8 @@ hr {
 }
 
 
-# div[data-testid="stSuccess"] {
-#     background-color: #E8F5E9 !important;
-#     color: #1B5E20 !important;
-# }
-
-# div[data-testid="stWarning"] {
-#     background-color: #FFF8E1 !important;
-#     color: #5D4037 !important;
-# }
-
-# div[data-testid="stError"] {
-#     background-color: #FDECEA !important;
-#     color: #B71C1C !important;
-# }
-
-# /* ---------- HR ---------- */
-# hr {
-#     border: 1px solid #80CBC4;
-# }
-
-# </style>
-# """, unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
 
 # st.markdown("""
@@ -310,6 +290,7 @@ if st.session_state.show_count:
                 count = result[col].sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
