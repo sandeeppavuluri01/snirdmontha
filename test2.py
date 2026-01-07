@@ -123,7 +123,7 @@ if st.session_state.show_search:
     colA, colB, colC, colD = st.columns(4)
     v_name = colA.text_input("🏘 Mandal Name").strip()
     p_name = colB.text_input("📍 Panchayat").strip()
-    m_name = colC.text_input("Ward No").strip()
+    m_name = colC.text_input("Ward Number").strip()
     d_name = colD.text_input("🌏 District").strip()
 
     f_name = st.text_input("👨‍👩‍👦 Family Head").strip()
@@ -142,7 +142,7 @@ if st.session_state.show_search:
     doc_list = [
         "Name of the Mandal",
         "Panchayat/ Area",
-        "Ward No.",
+        "Ward Number",
         "District",
         "Family Head Name",
         "Category",
@@ -198,5 +198,6 @@ if st.session_state.show_count:
                 count = result[col].sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
