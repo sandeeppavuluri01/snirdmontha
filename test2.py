@@ -74,7 +74,7 @@ def make_unique(cols):
     return new_cols
 
 # ---------------- LOAD EXCEL (NO UPLOAD) -----------------
-FILE_PATH = "1021- India - Cyclon Montha - HH Survey details - 30.12.2025.xlsx"
+FILE_PATH = "1021- India - Cyclon Montha - HH Survey Details - 30.12.25"
 
 if not os.path.exists(FILE_PATH):
     st.error("❌ Excel file not found at data/snir_data.xlsx")
@@ -198,3 +198,4 @@ if st.session_state.show_count:
                 count = result[col].sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
