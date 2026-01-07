@@ -66,10 +66,21 @@ div.stButton > button {
     background-color: #ffffff !important;
 }
 
+
+
 /* ---------- SUCCESS / WARNING / ERROR ---------- */
+
 div[data-testid="stSuccess"] {
-    background-color: #E8F5E9 !important;
-    color: #1B5E20 !important;
+    background-color: #E6FFFA !important;
+    color: #064E3B !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}
+
+/* Force success text visibility */
+div[data-testid="stSuccess"] p,
+div[data-testid="stSuccess"] span {
+    color: #064E3B !important;
 }
 
 div[data-testid="stWarning"] {
@@ -87,8 +98,29 @@ hr {
     border: 1px solid #80CBC4;
 }
 
-</style>
-""", unsafe_allow_html=True)
+
+# div[data-testid="stSuccess"] {
+#     background-color: #E8F5E9 !important;
+#     color: #1B5E20 !important;
+# }
+
+# div[data-testid="stWarning"] {
+#     background-color: #FFF8E1 !important;
+#     color: #5D4037 !important;
+# }
+
+# div[data-testid="stError"] {
+#     background-color: #FDECEA !important;
+#     color: #B71C1C !important;
+# }
+
+# /* ---------- HR ---------- */
+# hr {
+#     border: 1px solid #80CBC4;
+# }
+
+# </style>
+# """, unsafe_allow_html=True)
 
 
 # st.markdown("""
@@ -278,6 +310,7 @@ if st.session_state.show_count:
                 count = result[col].sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
