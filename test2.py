@@ -11,27 +11,107 @@ st.set_page_config(
 )
 
 # --------- STYLE ---------
+
 st.markdown("""
 <style>
-body, .stApp { background-color: #ffffff; }
-hr { border: 1px solid #B2EBF2; }
-label { font-weight: 600 !important; color: #004D40 !important; }
 
-input[type=text], select, textarea, .stTextInput>div>div>input {
-    background-color: #E0F2F1 !important;
-    border: 2px solid #009688 !important;
-    color: #004D40 !important;
+/* ---------- GLOBAL TEXT ---------- */
+html, body, .stApp {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;   /* Dark readable text */
+}
+
+/* ---------- HEADINGS ---------- */
+h1, h2, h3, h4, h5, h6 {
+    color: #0a3d62 !important;
+    font-weight: 700;
+}
+
+/* ---------- LABELS ---------- */
+label {
+    font-weight: 600 !important;
+    color: #0b3c49 !important;
+}
+
+/* ---------- INPUTS ---------- */
+input[type=text],
+textarea,
+select,
+.stTextInput>div>div>input {
+    background-color: #f4fbfb !important;
+    border: 2px solid #00796B !important;
+    color: #102a43 !important;   /* Strong contrast */
     border-radius: 6px !important;
 }
 
+/* ---------- SELECT BOX TEXT ---------- */
+div[data-baseweb="select"] span {
+    color: #102a43 !important;
+}
+
+/* ---------- BUTTONS ---------- */
 div.stButton > button {
-    background-color: #009688 !important;
-    color: white !important;
+    background-color: #00796B !important;
+    color: #ffffff !important;
     border-radius: 8px;
     padding: 8px 18px;
+    font-weight: 600;
 }
+
+/* ---------- DATAFRAME TEXT ---------- */
+.stDataFrame, 
+.stDataFrame td, 
+.stDataFrame th {
+    color: #1a1a1a !important;
+    background-color: #ffffff !important;
+}
+
+/* ---------- SUCCESS / WARNING / ERROR ---------- */
+div[data-testid="stSuccess"] {
+    background-color: #E8F5E9 !important;
+    color: #1B5E20 !important;
+}
+
+div[data-testid="stWarning"] {
+    background-color: #FFF8E1 !important;
+    color: #5D4037 !important;
+}
+
+div[data-testid="stError"] {
+    background-color: #FDECEA !important;
+    color: #B71C1C !important;
+}
+
+/* ---------- HR ---------- */
+hr {
+    border: 1px solid #80CBC4;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
+
+# st.markdown("""
+# <style>
+# body, .stApp { background-color: #ffffff; }
+# hr { border: 1px solid #B2EBF2; }
+# label { font-weight: 600 !important; color: #004D40 !important; }
+
+# input[type=text], select, textarea, .stTextInput>div>div>input {
+#     background-color: #E0F2F1 !important;
+#     border: 2px solid #009688 !important;
+#     color: #004D40 !important;
+#     border-radius: 6px !important;
+# }
+
+# div.stButton > button {
+#     background-color: #009688 !important;
+#     color: white !important;
+#     border-radius: 8px;
+#     padding: 8px 18px;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 
 # --------- HEADER IMAGE ---------
 try:
@@ -198,6 +278,7 @@ if st.session_state.show_count:
                 count = result[col].sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
