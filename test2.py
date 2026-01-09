@@ -5,7 +5,7 @@ import os
 
 # --------- GOOGLE SHEET LINKS ---------
 NFI_KIT_URL = "https://docs.google.com/spreadsheets/d/1QvzLka1SiYIeO2Q-MvdD8x3FG6Lvi_Kg/edit?usp=sharing"
-WASH_KIT_URL = "https://docs.google.com/spreadsheets/d/10vFO5iyXXXXX/edit?usp=sharing"
+WASH_KIT_URL = "https://docs.google.com/spreadsheets/d/10vFO5iylxERCNeBOM9a1s7j0s5bvAHhf/edit?usp=sharing&ouid=104741373340307322695&rtpof=true&sd=true"
 
 # --------- PAGE CONFIG ---------
 st.set_page_config(
@@ -260,3 +260,4 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
