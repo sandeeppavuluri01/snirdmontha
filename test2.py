@@ -221,8 +221,7 @@ if st.session_state.show_search:
         if f_name: result = result[result["Family Head Name"] == f_name]
         if category != "select": result = result[result["Category"] == category]
         if caste != "select": result = result[result["Caste"] == caste]
-        if gender != "select": result = result[result["Gender"] == gender]
-
+        
         if age != "select":
             if age == "below 18":
                 result = result[result["Age"] < 18]
@@ -233,6 +232,9 @@ if st.session_state.show_search:
             else:
                 result = result[result["Age"] >= 60]
 
+        if gender != "select": result = result[result["Gender"] == gender]
+
+
         st.success(f"✔ {len(result)} Records Found")
         st.dataframe(result.iloc[:, 1:-1], use_container_width=True, height=350)
 
@@ -240,7 +242,7 @@ if st.session_state.show_search:
 if st.session_state.show_count:
     st.markdown("## 📊 Count Summary")
 
-    mandal = st.text_input("🏘 Mandal Name").strip()
+    mandal = st.selectbox("🏘 Mandal Name", ["select"] + sorted(dataset["Name of the Mandal"].dropna().unique()))
     group = st.selectbox("👥 Group", ["select", "Children", "Handicapped"])
     gender = st.selectbox("⚧ Gender", ["select", "Male", "Female"])
 
@@ -263,6 +265,7 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
