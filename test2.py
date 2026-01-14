@@ -202,7 +202,7 @@ if st.session_state.show_search:
     v_name = colA.text_input("🏘 Mandal Name").strip()
     # p_name = colB.text_input("📍 Panchayat").strip()
     # m_name = colC.text_input("🛖 Ward Number").strip()
-    d_name = colD.text_input("🌏 District").strip()S
+    d_name = colD.text_input("🌏 District").strip()
     f_name = st.text_input("👨‍👩‍👦 Family Head").strip()
 
     col1, col2 = st.columns(2)
@@ -267,6 +267,7 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
