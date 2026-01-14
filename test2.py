@@ -207,7 +207,9 @@ if st.session_state.show_search:
     category = col1.selectbox("📁 Category", ["select"] + sorted(dataset["Category"].dropna().unique()))
     caste = col2.selectbox("🧬 Caste", ["select"] + sorted(dataset["Caste"].dropna().unique()))
 
-    age = st.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
+    cala, colb = st.columns(2)
+    age = cola.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
+    gender = colb.selectbox("♂ Gender", ["select'] + sorted(dataset["Gender"].dropna().unique()))
 
     if st.button("▶ RUN SEARCH", type="primary"):
         result = dataset.copy()
@@ -219,6 +221,7 @@ if st.session_state.show_search:
         if f_name: result = result[result["Family Head Name"] == f_name]
         if category != "select": result = result[result["Category"] == category]
         if caste != "select": result = result[result["Caste"] == caste]
+        if gender != "select": result = result[result["Gender"] == gender]
 
         if age != "select":
             if age == "below 18":
@@ -260,4 +263,5 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
