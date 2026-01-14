@@ -209,7 +209,7 @@ if st.session_state.show_search:
 
     cala, colb = st.columns(2)
     age = cola.selectbox("🎂 Age Group", ["select", "below 18", "18 to 50", "50 to 60", "above 60"])
-    gender = colb.selectbox("♂ Gender", ["select'] + sorted(dataset["Gender"].dropna().unique()))
+    gender = colb.selectbox("⚥ Gender", ["select'] + sorted(dataset["Gender"].dropna().unique()))
 
     if st.button("▶ RUN SEARCH", type="primary"):
         result = dataset.copy()
@@ -263,5 +263,6 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
