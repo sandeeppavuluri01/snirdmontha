@@ -138,7 +138,12 @@ if not os.path.exists(FILE_PATH):
 
 st.success("📁 Data loaded from local Excel file")
 
-df = pd.read_excel(FILE_PATH, header=[1, 2, 3])
+'''df = pd.read_excel(FILE_PATH, header=[1, 2, 3])'''
+try:
+    df = pd.read_excel(FILE_PATH, header=[1, 2, 3])
+except Exception as e:
+    st.error(f"Failed to read header rows: {e}")
+    st.stop()
 columns = [] 
 
 for i in df.columns:
@@ -267,6 +272,7 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
