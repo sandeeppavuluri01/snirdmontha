@@ -22,7 +22,7 @@ st.set_page_config(
     header {visibility: hidden;}
     </style>
     """,
-    unsafe_allow_html=True'''
+    unsafe_allow_html=True
 
 st.markdown(
     """
@@ -41,6 +41,20 @@ st.markdown(
 
     /* Hide mobile bottom-right "Manage app" */
     div[role="button"][aria-label*="Manage"] {display: none;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)'''
+
+st.markdown(
+    """
+    <style>
+    #MainMenu {display: none;}
+    header {display: none;}
+    footer {display: none;}
+    .stDeployButton {display: none;}
+    [data-testid="stToolbar"] {display: none;}
+    [data-testid="stStatusWidget"] {display: none;}
     </style>
     """,
     unsafe_allow_html=True
@@ -298,6 +312,7 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
