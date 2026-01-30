@@ -14,6 +14,16 @@ st.set_page_config(
     page_icon="🌾"
 )
 
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # --------- STYLE ---------
 st.markdown("""
 <style>
@@ -267,6 +277,7 @@ if st.session_state.show_count:
                 count = result[col].fillna(0).astype(int).sum()
 
         st.success(f"### ✔ Total Persons Count: **{count}**")
+
 
 
 
